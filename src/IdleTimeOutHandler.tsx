@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { createWorker } from "./createWorker";
 
 interface IdleTimeOutHandlerProps {
   onActive?: () => void;
@@ -21,7 +22,7 @@ const IdleTimeOutHandler = ({
   const [isIdle, setIsIdle] = useState(false);
   const [remainingTime, setRemainingTime] = useState();
   const worker = useRef<Worker>();
-  
+
   const eventHandler = () => {
     localStorage.setItem(
       "lastInteractionTime",
@@ -47,7 +48,7 @@ const IdleTimeOutHandler = ({
       );
     }
 
-    worker.current = new Worker('./timer-worker.js');
+    worker.current = createWorker('./timer-worker.js');
     worker.current?.postMessage({ key: "timeOutInterval", value: timeOutInterval });
     worker.current?.postMessage({ key: "countDownOutInterval", value: countDownInterval });
     worker.current?.postMessage({ key: "startTimer", value: lastInteractionTime });
